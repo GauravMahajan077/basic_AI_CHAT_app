@@ -1,38 +1,37 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./App.css"; // see styles below
+import "./App.css"; 
 
 export default function App() {
   const [messages, setMessages] = useState([
-    // example initial user messages you showed
-    // { role: "user", text: "hi" }, { role: "user", text: "hello" }
+   
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    // auto scroll to bottom when messages change
+    // auto scroll 
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   function extractAIText(data) {
-    // universal extractor for variation in server response
+   
     if (!data) return "";
     if (typeof data.text === "string" && data.text.trim()) return data.text;
     if (typeof data.response === "string" && data.response.trim()) return data.response;
 
-    // Try common SDK shapes:
+    
     const raw = data.raw || data;
     try {
-      // modern google genai shape
+   
       if (raw?.output?.[0]?.content?.[0]?.text) {
         return raw.output[0].content[0].text;
       }
-      // candidate-based
+     
       if (Array.isArray(raw?.candidates) && raw.candidates.length) {
         return raw.candidates.map(c => (c.output || c.text)).join("\n");
       }
-      // fallback to stringified small portion
+     
       const s = JSON.stringify(data);
       return s.length > 0 ? s.slice(0, 1000) : "";
     } catch (e) {
@@ -42,13 +41,13 @@ export default function App() {
 
   async function sendMessage(userMessage) {
     if (!userMessage) return;
-    // push user message immediately
+    // push user message quicklly
     setMessages(prev => [...prev, { role: "user", text: userMessage }]);
     setInput("");
     setLoading(true);
 
     try {
-      // Use full absolute URL to avoid proxy issues; adjust if you prefer proxy config
+      
       const res = await fetch("http://localhost:5000/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -64,7 +63,7 @@ export default function App() {
       }
 
       const data = await res.json();
-      console.log("server returned:", data); // open the console to see the raw shape
+      console.log("server returned:", data); 
       const aiText = extractAIText(data);
       setMessages(prev => [...prev, { role: "assistant", text: aiText }]);
     } catch (err) {
