@@ -1,8 +1,7 @@
-// client/src/main.jsx
-import React from "react";                      // <- ADD THIS LINE
+import React from "react";                     
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import "./index.css"; // if you have global CSS (optional)
+import "./index.css"; 
 
 const rootEl = document.getElementById("root");
 const root = createRoot(rootEl);
